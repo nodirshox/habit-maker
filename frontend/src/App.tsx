@@ -1,30 +1,24 @@
-import * as React from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://github.com/nodirshox/habit-maker">
-        habit-maker.app
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}
+import * as React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignIn from "./pages/auth/SignIn";
+import { ProtectRoutes } from "./utils/protected-routes";
+import DashboardLayout from "./components/layouts/Dashboard";
+import Home from "./pages/home/Home";
+import "./App.css";
+import Logout from "./pages/auth/Logout";
 
 export default function App() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Habit Maker
-        </Typography>
-        <Copyright />
-      </Box>
-    </Container>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route element={<ProtectRoutes />}>
+          <Route path="/" element={<DashboardLayout />}>
+            <Route index element={<Home />} />
+          </Route>
+        </Route>
+      </Routes>
+    </Router>
   );
 }
