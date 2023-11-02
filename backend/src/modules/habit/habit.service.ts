@@ -25,11 +25,11 @@ export class HabitService {
     })
   }
 
-  async getAllHabits(user: IUser): Promise<HabitResponseDto[]> {
+  async getAllHabits(userId: string): Promise<HabitResponseDto[]> {
     return await this.prisma.habit.findMany({
       where: {
         user: {
-          id: user.id,
+          id: userId,
         },
       },
       include: {

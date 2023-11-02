@@ -45,7 +45,7 @@ export class HabitController {
   @ApiResponse({ status: HttpStatus.OK, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)
   getAllHabits(@User() user: IUser): Promise<HabitResponseDto[]> {
-    return this.habitService.getAllHabits(user)
+    return this.habitService.getAllHabits(user.id)
   }
 
   @Put(':id')
