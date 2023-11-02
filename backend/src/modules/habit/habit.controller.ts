@@ -33,7 +33,7 @@ export class HabitController {
   @ApiOperation({ summary: 'Create habits' })
   @ApiResponse({ status: HttpStatus.CREATED, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)
-  createHabits(
+  createHabit(
     @User() user: IUser,
     @Body() body: CreateHabitDto,
   ): Promise<CreateHabitDto> {

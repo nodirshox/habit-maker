@@ -22,7 +22,7 @@ export class ActivityController {
   @ApiOperation({ summary: 'Create habits' })
   @ApiResponse({ status: HttpStatus.CREATED, type: ActivityResponseDto })
   @UseGuards(JwtAuthGuard)
-  createHabits(
+  createActivity(
     @Body() body: CreateActivityDto,
     @User() user: IUser,
   ): Promise<CreateActivityDto> {
