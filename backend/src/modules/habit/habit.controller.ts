@@ -24,13 +24,13 @@ import { User } from '@/decorators/user.decorator'
 import { IUser } from '../users/dto/user.interface'
 
 @ApiTags('Habits')
+@ApiBearerAuth()
 @Controller({ path: 'habits', version: '1' })
 export class HabitController {
   constructor(private readonly habitService: HabitService) {}
 
   @Post()
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create habits' })
+  @ApiOperation({ summary: 'Create habit' })
   @ApiResponse({ status: HttpStatus.CREATED, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)
   createHabit(
@@ -41,7 +41,6 @@ export class HabitController {
   }
 
   @Get()
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get All habits' })
   @ApiResponse({ status: HttpStatus.OK, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)
@@ -50,7 +49,6 @@ export class HabitController {
   }
 
   @Put(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update habit by Id' })
   @ApiResponse({ status: HttpStatus.OK, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)
@@ -63,7 +61,6 @@ export class HabitController {
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete habit by Id' })
   @ApiResponse({ status: HttpStatus.OK, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)

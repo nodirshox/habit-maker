@@ -13,13 +13,13 @@ import { CreateActivityDto } from './dto/create-activity.dto'
 import { ActivityResponseDto } from './dto/activity-response.dto'
 
 @ApiTags('Activities')
+@ApiBearerAuth()
 @Controller({ path: 'activities', version: '1' })
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
 
   @Post()
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create habits' })
+  @ApiOperation({ summary: 'Create activity' })
   @ApiResponse({ status: HttpStatus.CREATED, type: ActivityResponseDto })
   @UseGuards(JwtAuthGuard)
   createActivity(
