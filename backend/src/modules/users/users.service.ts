@@ -22,6 +22,7 @@ export class UsersService {
         role: true,
         createdAt: true,
         updatedAt: true,
+        habits: true,
       },
     })
   }
