@@ -60,31 +60,28 @@ export class HabitService {
     query: UpdateHabitDto,
     userId: string,
   ): Promise<HabitResponseDto> {
-    const existingHabit = await this.getHabitById(habitId, userId)
-    if (existingHabit) {
-      return await this.prisma.habit.update({
-        where: {
-          id: habitId,
-        },
-        data: {
-          title: query.title,
-          description: query.description,
-        },
-      })
-    }
+    await this.getHabitById(habitId, userId)
+
+    return await this.prisma.habit.update({
+      where: {
+        id: habitId,
+      },
+      data: {
+        title: query.title,
+        description: query.description,
+      },
+    })
   }
 
   async deleteHabitById(
     habitId: string,
     userId: string,
   ): Promise<HabitResponseDto> {
-    const existingHabit = await this.getHabitById(habitId, userId)
-    if (existingHabit) {
-      return await this.prisma.habit.delete({
-        where: {
-          id: habitId,
-        },
-      })
-    }
+    await this.getHabitById(habitId, userId)
+    return await this.prisma.habit.delete({
+      where: {
+        id: habitId,
+      },
+    })
   }
 }
