@@ -13,7 +13,7 @@ async function main() {
         lastName: 'Doe',
         email: 'user@mail.com',
         password: await bcrypt.hash('password', PASSWORD_SALT),
-        role: UserRoles.ADMIN,
+        role: UserRoles.USER,
       },
     }),
   ]).catch((error) => console.error(error))

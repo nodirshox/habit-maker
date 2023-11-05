@@ -1,6 +1,5 @@
 import { PrismaService } from '@/core/prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
-import { IUser } from '@/modules/users/dto/user.interface'
 import { GetProfileResponseDto } from './dto/get-profile.dto'
 import { Prisma } from '@prisma/client'
 
@@ -8,11 +7,11 @@ import { Prisma } from '@prisma/client'
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getProfile(user: IUser): Promise<GetProfileResponseDto> {
+  async getProfile(userId: string): Promise<GetProfileResponseDto> {
     const where: Prisma.UserWhereUniqueInput = {
-      id: user.id,
+      id: userId,
     }
-    return this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where,
       select: {
         id: true,
@@ -22,7 +21,6 @@ export class UsersService {
         role: true,
         createdAt: true,
         updatedAt: true,
-        habits: true,
       },
     })
   }

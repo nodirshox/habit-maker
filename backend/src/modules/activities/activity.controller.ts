@@ -5,12 +5,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { ActivityService } from './activity.service'
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+import { ActivityService } from '@/modules/activities/activity.service'
+import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { User } from '@/decorators/user.decorator'
-import { IUser } from '../users/dto/user.interface'
-import { CreateActivityDto } from './dto/create-activity.dto'
-import { ActivityResponseDto } from './dto/activity-response.dto'
+import { IUser } from '@/modules/users/dto/user.interface'
+import { CreateActivityDto } from '@/modules/activities/dto/create-activity.dto'
+import { ActivityResponseDto } from '@/modules/activities/dto/activity-response.dto'
 
 @ApiTags('Activities')
 @ApiBearerAuth()

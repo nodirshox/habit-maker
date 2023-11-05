@@ -22,6 +22,6 @@ export class UsersController {
   @ApiResponse({ status: HttpStatus.OK, type: GetProfileResponseDto })
   @UseGuards(JwtAuthGuard)
   getProfile(@User() user: IUser): Promise<GetProfileResponseDto> {
-    return this.userService.getProfile(user)
+    return this.userService.getProfile(user.id)
   }
 }

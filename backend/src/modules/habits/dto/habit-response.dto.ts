@@ -14,7 +14,7 @@ export class HabitResponseDto {
     description: 'Habit Description',
     example: 'Healthy food and no sugar for 30 days challenge',
   })
-  description?: string
+  description: string
 
   @ApiProperty({ description: 'Habit created time', example: new Date() })
   createdAt: Date

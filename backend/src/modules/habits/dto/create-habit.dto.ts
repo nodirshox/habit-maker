@@ -18,7 +18,7 @@ export class CreateHabitDto {
     required: false,
     example: 'Eating healthy and no sugar based food for 30 days',
   })
-  description?: string
+  description: string
 }
 
 export class UpdateHabitDto {
@@ -38,5 +38,5 @@ export class UpdateHabitDto {
     required: false,
     example: 'Eating healthy and no sugar based food for 30 days',
   })
-  description?: string
+  description: string
 }
