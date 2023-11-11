@@ -26,6 +26,7 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_REPOSITORY }}
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
