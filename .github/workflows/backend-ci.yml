@@ -34,4 +34,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            touch test.txt
+            cd habit-maker/backend
+            docker compose down
+            docker rmi ${{ secrets.DOCKERHUB_REPOSITORY }}
+            docker pull ${{ secrets.DOCKERHUB_REPOSITORY }}
+            docker compose up -d
