@@ -1,35 +1,21 @@
-ARG NODE_VERSION=16-alpine3.16
-
-###
-# 1. Dependencies
-###
-
-# Build with alpine linux
-FROM node:${NODE_VERSION} as builder
-
-ARG ENV_FILE
-
-# Create app directory
-WORKDIR /app
-
-COPY tsconfig.json package.json yarn.lock ./
-COPY prisma ./prisma/
-
-# Install app dependencies
-RUN yarn install --frozen-lockfile
-
-# Comment next line to apply prisma changes not automatically
-RUN yarn prisma:generate && yarn migrate-prod
-
+FROM node:18 as build
+WORKDIR /usr/src/app
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 COPY . .
+RUN npx prisma generate
 RUN npm run build
 
-FROM node:${NODE_VERSION}
+FROM node:18-slim
+RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
+WORKDIR /usr/src/app
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --chown=node:node --from=build /usr/src/app/package.json .
+COPY --chown=node:node --from=build /usr/src/app/package-lock.json .
+RUN npm install --omit=dev
+COPY --chown=node:node --from=build /usr/src/app/node_modules/.prisma/client  ./node_modules/.prisma/client
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/yarn.lock ./
-COPY --from=builder /app/dist ./dist
-
+ENV NODE_ENV production
 EXPOSE 4000
-CMD [ "yarn", "start:prod" ]
+CMD ["dumb-init", "node", "dist/src/main"]
