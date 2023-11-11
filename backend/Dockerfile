@@ -4,8 +4,7 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm install
 COPY . .
-RUN npx prisma generate
-RUN npx prisma migrate deploy
+RUN npx prisma generate && npm migrate-prod
 RUN npm run build
 
 FROM node:18-slim
