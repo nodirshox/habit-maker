@@ -1,6 +1,39 @@
 version: "3.1"
 
 services:
+  reverse-proxy:
+    container_name: travel-traefik
+    image: traefik:v2.10
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--metrics.prometheus=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=mr.nodirbek77@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9091:8080"
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: bind
+        source: ./letsencrypt
+        target: /letsencrypt
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.reverse-proxy.rule=Host(`${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.reverse-proxy.entrypoints=websecure"
+      - "traefik.http.routers.reverse-proxy.tls.certresolver=letsencrypt"
+      - "traefik.http.services.reverse-proxy.loadbalancer.server.port=8080"
+      - "traefik.docker.network=hm_default"
   postgres:
     container_name: habit-maker-postgres
     image: postgres:15-alpine
@@ -23,6 +56,13 @@ services:
       - BACKEND_API=${BACKEND_API}
     ports:
       - "6001:4000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${BACKEND_DOMAIN}`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=4000"
+      - "traefik.docker.network=hm_default"
 volumes:
   habit-db:
     driver: local
