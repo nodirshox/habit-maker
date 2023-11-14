@@ -14,6 +14,10 @@ import {
   RestoreAccountErrorResponseDto,
   RestoreAccountResponseDto,
 } from '@/modules/auth/dto/restore-account.dto'
+import {
+  GenerateRegistrationOtp,
+  VerifyRegistrationOtp,
+} from '@/modules/auth/dto/registration.dto'
 
 @ApiTags('Auth')
 @Controller({ path: 'auth', version: '1' })
@@ -48,5 +52,17 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.CREATED, type: RestoreAccountResponseDto })
   restoreAccount(@Body() body: RestoreAccountDto) {
     return this.authService.restoreAccount(body)
+  }
+
+  @Post('registration/otp')
+  @ApiOperation({ summary: 'Generate registration OTP' })
+  generateRegistrationOtp(@Body() body: GenerateRegistrationOtp) {
+    return this.authService.generateRegistrationOtp(body)
+  }
+
+  @Post('registration/verify')
+  @ApiOperation({ summary: 'Verify registration OTP' })
+  verifyRegistrationOtp(@Body() body: VerifyRegistrationOtp) {
+    return this.authService.verifyRegistrationOtp(body)
   }
 }

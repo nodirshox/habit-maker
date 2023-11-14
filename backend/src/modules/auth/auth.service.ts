@@ -15,7 +15,12 @@ import {
   RestoreAccountDto,
   RestoreAccountResponseDto,
 } from '@/modules/auth/dto/restore-account.dto'
-import { RESTORE_LINK_DURATION_MINUTES } from '@/consts/restore-password'
+import { RESTORE_LINK_DURATION_MINUTES } from '@/consts/registration'
+import {
+  GenerateRegistrationOtp,
+  VerifyRegistrationOtp,
+} from '@/modules/auth/dto/registration.dto'
+import { EmailService } from '@/core/email/email.service'
 
 @Injectable()
 export class AuthService {
@@ -23,6 +28,7 @@ export class AuthService {
     private utils: UtilsService,
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
   ) {}
 
   async login(body: LoginDto): Promise<LoginResponseDto> {
@@ -102,9 +108,9 @@ export class AuthService {
       },
     })
 
-    // send link
     const link = `${process.env.BACKEND_API}/v1/restore-account?token=${token}`
-    console.log(`Link: ${link} is sent to ${body.email}`)
+    await this.emailService.sendValidationLink(body.email, link)
+
     return {
       message: HTTP_MESSAGES.RESTORE_LINK_SENT,
     }
@@ -175,6 +181,96 @@ export class AuthService {
     })
     return {
       message: HTTP_MESSAGES.PASSWORD_UPDATED,
+    }
+  }
+
+  async generateRegistrationOtp(body: GenerateRegistrationOtp) {
+    const email = body.email
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (user) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: HTTP_MESSAGES.EMAIL_IS_EXISTS,
+        },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const otp = this.utils.generateOtp()
+    await this.emailService.sendRegistrationOtp(body.email, otp)
+
+    const result = await this.prisma.verificationCodes.upsert({
+      where: { email },
+      update: {
+        otp: otp,
+        password: await this.utils.generateBcrypt(body.password),
+      },
+      create: {
+        otp: otp,
+        email,
+        password: await this.utils.generateBcrypt(body.password),
+      },
+    })
+
+    return { token: result.id }
+  }
+
+  async verifyRegistrationOtp(body: VerifyRegistrationOtp) {
+    try {
+      const verificationCode = await this.prisma.verificationCodes.findUnique({
+        where: {
+          id: body.token,
+        },
+      })
+
+      if (!verificationCode) throw new Error('OTP not found')
+
+      if (this.utils.isOtpExpired(verificationCode.createdAt)) {
+        await this.prisma.verificationCodes.delete({
+          where: { id: body.token },
+        })
+        throw new Error('OTP is expired')
+      }
+
+      if (body.otp !== verificationCode.otp) {
+        throw new Error('Incorrect OTP')
+      }
+
+      const deleteVerificationCode = this.prisma.verificationCodes.delete({
+        where: { id: verificationCode.id },
+      })
+      const createUser = this.prisma.user.create({
+        data: {
+          firstName: 'New',
+          lastName: 'User',
+          email: verificationCode.email,
+          password: verificationCode.password,
+        },
+      })
+      const result = await this.prisma.$transaction([
+        deleteVerificationCode,
+        createUser,
+      ])
+      const user = result[1]
+
+      delete user.password
+      const payload = { id: user.id, role: user.role }
+      const accessToken = this.jwtService.sign(payload)
+
+      return { user, accessToken }
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      )
     }
   }
 }

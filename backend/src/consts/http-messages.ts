@@ -1,12 +1,16 @@
 export const HTTP_MESSAGES = {
+  // General
+  INTERNAL_SERVER_ERROR: 'Internal server error',
+
   // Auth
-  USER_NOT_FOUND: 'USER_NOT_FOUND',
-  WRONG_PASSWORD: 'WRONG_PASSWORD',
-  RESTORE_LINK_SENT: 'RESTORE_LINK_SENT',
-  RESTOR_LINK_TOKEN_NOT_FOUND: 'RESTOR_LINK_TOKEN_NOT_FOUND',
-  RESTOR_LINK_EXPIRED: 'RESTOR_LINK_EXPIRED',
-  PASSWORD_UPDATED: 'PASSWORD_UPDATED',
+  USER_NOT_FOUND: 'User not found',
+  WRONG_PASSWORD: 'Wrong password',
+  RESTORE_LINK_SENT: 'Restore link send',
+  RESTOR_LINK_TOKEN_NOT_FOUND: 'Restore link token not found',
+  RESTOR_LINK_EXPIRED: 'Restore link expired',
+  PASSWORD_UPDATED: 'Password updated',
+  EMAIL_IS_EXISTS: 'Email is already exists',
 
   // Habit
-  HABIT_NOT_FOUND: 'HABIT_NOT_FOUND',
+  HABIT_NOT_FOUND: 'Habit not found',
 }
