@@ -11,6 +11,7 @@ import {
 import { HabitResponseDto } from '@/modules/habits/dto/habit-response.dto'
 import { HTTP_MESSAGES } from '@/consts/http-messages'
 import { HabitsRepository } from '@/modules/habits/habits.repository'
+import { GetHabitsDto } from '@/modules/habits/dto/get-habits.dto'
 
 @Injectable()
 export class HabitsService {
@@ -24,9 +25,9 @@ export class HabitsService {
     return habit
   }
 
-  async getHabits(userId: string): Promise<HabitResponseDto[]> {
+  async getHabits(userId: string): Promise<GetHabitsDto> {
     const habits = await this.habitsRepository.findHabitsByUser(userId)
-    return habits
+    return { habits }
   }
 
   async getHabit(habitId: string, userId: string): Promise<HabitResponseDto> {

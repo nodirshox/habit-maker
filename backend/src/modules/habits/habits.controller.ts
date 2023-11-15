@@ -25,6 +25,7 @@ import {
 } from '@/modules/habits/dto/create-habit.dto'
 import { User } from '@/decorators/user.decorator'
 import { IUser } from '@/modules/users/dto/user.interface'
+import { GetHabitsDto } from '@/modules/habits/dto/get-habits.dto'
 
 @ApiTags('Habits')
 @ApiBearerAuth()
@@ -47,7 +48,7 @@ export class HabitController {
   @ApiOperation({ summary: 'Get habits' })
   @ApiResponse({ status: HttpStatus.OK, type: HabitResponseDto })
   @UseGuards(JwtAuthGuard)
-  getHabits(@User() user: IUser): Promise<HabitResponseDto[]> {
+  getHabits(@User() user: IUser): Promise<GetHabitsDto> {
     return this.service.getHabits(user.id)
   }
 
