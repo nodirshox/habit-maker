@@ -34,7 +34,7 @@ services:
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
       - "traefik.docker.network=ta_default"
-    network:
+    networks:
      - common_network
 volumes:
   habit-db:
