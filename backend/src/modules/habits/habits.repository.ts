@@ -14,7 +14,6 @@ export class HabitsRepository {
     return this.prisma.habit.create({
       data: {
         title: body.title,
-        description: body.description,
         user: {
           connect: {
             id: userId,
@@ -24,11 +23,20 @@ export class HabitsRepository {
     })
   }
 
-  async findHabitsByUser(userId: string): Promise<Habit[]> {
+  async findHabitsByUser(userId: string) {
     return this.prisma.habit.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
-      include: { activities: true },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        activities: {
+          select: {
+            date: true,
+          },
+        },
+      },
     })
   }
 
@@ -38,10 +46,19 @@ export class HabitsRepository {
     })
   }
 
-  async findHabitByIdWithActivies(habitId: string): Promise<Habit | null> {
+  async findHabitByIdWithActivies(habitId: string) {
     return this.prisma.habit.findUnique({
       where: { id: habitId },
-      include: { activities: true },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        activities: {
+          select: {
+            date: true,
+          },
+        },
+      },
     })
   }
 
@@ -50,7 +67,6 @@ export class HabitsRepository {
       where: { id: habitId },
       data: {
         title: body.title,
-        description: body.description,
       },
     })
   }

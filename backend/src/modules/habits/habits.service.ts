@@ -11,7 +11,6 @@ import {
 import { HabitResponseDto } from '@/modules/habits/dto/habit-response.dto'
 import { HTTP_MESSAGES } from '@/consts/http-messages'
 import { HabitsRepository } from '@/modules/habits/habits.repository'
-import { GetHabitsDto } from '@/modules/habits/dto/get-habits.dto'
 
 @Injectable()
 export class HabitsService {
@@ -25,12 +24,12 @@ export class HabitsService {
     return habit
   }
 
-  async getHabits(userId: string): Promise<GetHabitsDto> {
+  async getHabits(userId: string) {
     const habits = await this.habitsRepository.findHabitsByUser(userId)
     return { habits }
   }
 
-  async getHabit(habitId: string, userId: string): Promise<HabitResponseDto> {
+  async getHabit(habitId: string, userId: string) {
     await this.ensureHabitExistsAndBelongsToUser(habitId, userId)
     const habit = await this.habitsRepository.findHabitByIdWithActivies(habitId)
 
@@ -52,7 +51,7 @@ export class HabitsService {
     await this.habitsRepository.deleteHabit(habitId)
   }
 
-  private async ensureHabitExistsAndBelongsToUser(
+  async ensureHabitExistsAndBelongsToUser(
     habitId: string,
     userId: string,
   ): Promise<void> {

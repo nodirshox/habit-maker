@@ -5,14 +5,16 @@ import { HabitsService } from '@/modules/habits/habits.service'
 
 @Injectable()
 export class ActivityService {
-  constructor(private readonly activityRepository: ActivityRepository) {}
+  constructor(
+    private readonly activityRepository: ActivityRepository,
+    private readonly habitService: HabitsService,
+  ) {}
 
-  async createActivity(
-    body: CreateActivityDto,
-    userId: string,
-  ): Promise<CreateActivityDto> {
-    // TODO: check habit with user ID
-    console.log(userId)
+  async createActivity(body: CreateActivityDto, userId: string) {
+    await this.habitService.ensureHabitExistsAndBelongsToUser(
+      body.habitId,
+      userId,
+    )
     const activity = await this.activityRepository.createActivity(body)
     return activity
   }

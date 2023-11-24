@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator'
 
 export class CreateActivityDto {
   @IsNotEmpty()
@@ -15,5 +15,6 @@ export class CreateActivityDto {
     description: 'Date',
     example: new Date(),
   })
-  createdAt: Date
+  @IsDateString()
+  date: Date
 }

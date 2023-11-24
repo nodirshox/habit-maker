@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 
 export class CreateHabitDto {
   @IsNotEmpty()
@@ -10,15 +10,6 @@ export class CreateHabitDto {
     example: 'No sugar',
   })
   title: string
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty({
-    description: 'Description',
-    required: false,
-    example: 'Eating healthy and no sugar based food for 30 days',
-  })
-  description: string
 }
 
 export class UpdateHabitDto {
@@ -30,13 +21,4 @@ export class UpdateHabitDto {
     example: 'No sugar',
   })
   title: string
-
-  @IsOptional()
-  @IsString()
-  @ApiProperty({
-    description: 'Description',
-    required: false,
-    example: 'Eating healthy and no sugar based food for 30 days',
-  })
-  description: string
 }

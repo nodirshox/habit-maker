@@ -43,11 +43,10 @@ model RestoreAccountToken {
 }
 
 model Habit {
-  id          String   @id @default(uuid())
-  title       String
-  description String   @default("")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
@@ -58,8 +57,8 @@ model Habit {
 }
 
 model Activity {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
+  id   String   @id @default(uuid())
+  date DateTime @default(now())
 
   habitId String @map("habit_id")
   habit   Habit  @relation(fields: [habitId], references: [id])
