@@ -50,7 +50,7 @@ export class HabitsRepository {
       where: { id: habitId },
       data: {
         title: body.title,
-        description: body.title,
+        description: body.description,
       },
     })
   }
