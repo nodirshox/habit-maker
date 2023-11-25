@@ -104,7 +104,7 @@ export class AuthService {
       update: {
         email: body.email,
         token: token,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(),
       },
     })
 
