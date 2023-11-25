@@ -263,7 +263,7 @@ export class AuthService {
       const payload = { id: user.id, role: user.role }
       const accessToken = this.jwtService.sign(payload)
 
-      return { user, accessToken }
+      return { user, token: { accessToken } }
     } catch (error) {
       throw new HttpException(
         {
