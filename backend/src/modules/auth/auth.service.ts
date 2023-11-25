@@ -209,6 +209,7 @@ export class AuthService {
       update: {
         otp: otp,
         password: await this.utils.generateBcrypt(body.password),
+        createdAt: new Date(),
       },
       create: {
         otp: otp,
