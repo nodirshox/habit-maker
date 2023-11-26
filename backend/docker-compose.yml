@@ -4,15 +4,24 @@ services:
   postgres:
     container_name: habit-maker-postgres
     image: postgres:15-alpine
+    restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "6000:5432"
-    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${POSTGRES_DOMAIN}`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=5432"
+      - "traefik.docker.network=ta_default"
     volumes:
       - habit-db:/var/lib/postgresql/data
+    networks:
+     - common_network
   backend:
     container_name: habit-maker-backend
     image: nodirshox/habit-maker-backend:latest
