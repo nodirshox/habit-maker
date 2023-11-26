@@ -36,7 +36,7 @@ jobs:
           script: |
             cd habit-maker/backend
             git pull
-            docker compose down
+            docker compose stop backend
             docker rmi ${{ secrets.DOCKERHUB_REPOSITORY }}
             docker pull ${{ secrets.DOCKERHUB_REPOSITORY }}
-            docker compose up -d
+            docker compose start backend
