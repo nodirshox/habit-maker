@@ -5,7 +5,7 @@ import { PrismaService } from '@/core/prisma/prisma.service'
 import { UtilsService } from '@/core/utils/utils.service'
 import { LoginResponseDto } from '@/modules/auth/dto/login-response.dto'
 import { HTTP_MESSAGES } from '@/consts/http-messages'
-import { Prisma, User } from '@prisma/client'
+import { Prisma, User, UserRoles } from '@prisma/client'
 import {
   GenerateLinkDto,
   GenerateLinkResposeDto,
@@ -21,6 +21,8 @@ import {
   VerifyRegistrationOtp,
 } from '@/modules/auth/dto/registration.dto'
 import { EmailService } from '@/core/email/email.service'
+import { RefreshTokenDto } from '@/modules/auth/dto/refresh-token.dto'
+import { REFRESH_TOKEN_EXPIRATION_TIME } from '@/consts/tokens'
 
 @Injectable()
 export class AuthService {
@@ -63,12 +65,48 @@ export class AuthService {
     }
 
     delete user.password
-    const payload = { id: user.id, role: user.role }
 
-    const accessToken = this.jwtService.sign(payload)
     return {
       user,
-      token: { accessToken },
+      token: this.generateTokens(user.id, user.role),
+    }
+  }
+
+  async refreshToken(body: RefreshTokenDto) {
+    try {
+      const decodedToken = this.jwtService.decode(body.refreshToken)
+      if (!decodedToken) throw new Error(HTTP_MESSAGES.INVALID_TOKEN)
+
+      const { id, exp } = decodedToken as { id; role; exp }
+
+      const isTokenExpired = Date.now() >= exp * 1000
+
+      if (isTokenExpired) {
+        throw new Error(HTTP_MESSAGES.EXPIRED_TOKEN)
+      }
+
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+      })
+      if (!user) throw new Error(HTTP_MESSAGES.USER_NOT_FOUND)
+      delete user.password
+
+      return {
+        user,
+        token: this.generateTokens(user.id, user.role),
+      }
+    } catch (error) {
+      let statusCode = HttpStatus.BAD_REQUEST
+      if (error.message === HTTP_MESSAGES.EXPIRED_TOKEN) {
+        statusCode = HttpStatus.UNAUTHORIZED
+      }
+      throw new HttpException(
+        {
+          statusCode,
+          message: error.message,
+        },
+        statusCode,
+      )
     }
   }
 
@@ -172,12 +210,8 @@ export class AuthService {
 
     const hashPassword = await this.utils.generateBcrypt(body.password)
     await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        password: hashPassword,
-      },
+      where: { id: user.id },
+      data: { password: hashPassword },
     })
     return {
       message: HTTP_MESSAGES.PASSWORD_UPDATED,
@@ -221,7 +255,9 @@ export class AuthService {
     return { token: result.id }
   }
 
-  async verifyRegistrationOtp(body: VerifyRegistrationOtp) {
+  async verifyRegistrationOtp(
+    body: VerifyRegistrationOtp,
+  ): Promise<LoginResponseDto> {
     try {
       const verificationCode = await this.prisma.verificationCodes.findUnique({
         where: {
@@ -258,12 +294,9 @@ export class AuthService {
         createUser,
       ])
       const user = result[1]
-
       delete user.password
-      const payload = { id: user.id, role: user.role }
-      const accessToken = this.jwtService.sign(payload)
 
-      return { user, token: { accessToken } }
+      return { user, token: this.generateTokens(user.id, user.role) }
     } catch (error) {
       throw new HttpException(
         {
@@ -273,5 +306,17 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       )
     }
+  }
+
+  private generateTokens(userId: string, userRole: UserRoles) {
+    const payload = { id: userId, role: userRole }
+
+    const accessToken = this.jwtService.sign(payload)
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: REFRESH_TOKEN_EXPIRATION_TIME,
+      secret: process.env.REFRESH_TOKEN_SECRET,
+    })
+
+    return { accessToken, refreshToken }
   }
 }

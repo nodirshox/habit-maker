@@ -1,3 +1,7 @@
+import {
+  OTP_VALID_DURATION_MINUTES,
+  RESTORE_LINK_DURATION_MINUTES,
+} from '@/consts/registration'
 import { Injectable } from '@nestjs/common'
 import { createTransport } from 'nodemailer'
 
@@ -18,7 +22,7 @@ export class EmailService {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: 'Habit Maker',
-      html: `<body><p>By pressing the link you will confirm yourself: <a clicktracking="off" href='${link}'>Restore account</a>. The link expires in 2 minutes.</p></body>`,
+      html: `<body><p>By pressing the link you will confirm yourself: <a clicktracking="off" href='${link}'>Restore account</a>. The link expires in ${RESTORE_LINK_DURATION_MINUTES} minutes.</p></body>`,
     })
   }
 
@@ -27,7 +31,7 @@ export class EmailService {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: 'Habit Maker',
-      html: `<body><p>Your OTP: ${otp}</p></body>`,
+      html: `<body><p>Your OTP: ${otp}. It expires in ${OTP_VALID_DURATION_MINUTES} minutes</p></body>`,
     })
   }
 }
