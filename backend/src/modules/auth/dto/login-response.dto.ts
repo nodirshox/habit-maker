@@ -6,6 +6,9 @@ class UserInformation extends GetProfileResponseDto {}
 export class TokenDto {
   @ApiProperty({ description: "User's access token" })
   accessToken: string
+
+  @ApiProperty({ description: "User's refresh token" })
+  refreshToken: string
 }
 
 export class LoginResponseDto {

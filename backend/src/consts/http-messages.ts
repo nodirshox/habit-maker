@@ -10,6 +10,8 @@ export const HTTP_MESSAGES = {
   RESTOR_LINK_EXPIRED: 'Restore link expired',
   PASSWORD_UPDATED: 'Password updated',
   EMAIL_IS_EXISTS: 'Email is already exists',
+  INVALID_TOKEN: 'Token is invalid',
+  EXPIRED_TOKEN: 'Token is expired',
 
   // Habit
   HABIT_NOT_FOUND: 'Habit not found',
