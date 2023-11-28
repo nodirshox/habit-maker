@@ -62,7 +62,7 @@ export class HabitsService {
     }
 
     if (habit.userId !== userId) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
+      throw new HttpException(HTTP_MESSAGES.FORBIDDEN, HttpStatus.FORBIDDEN)
     }
   }
 }

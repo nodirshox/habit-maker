@@ -1,6 +1,7 @@
 export const HTTP_MESSAGES = {
   // General
   INTERNAL_SERVER_ERROR: 'Internal server error',
+  FORBIDDEN: 'Forbidden',
 
   // Auth
   USER_NOT_FOUND: 'User not found',

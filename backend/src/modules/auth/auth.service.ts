@@ -35,17 +35,17 @@ export class AuthService {
 
   async login(body: LoginDto): Promise<LoginResponseDto> {
     const where: Prisma.UserWhereInput = {
-      email: body.email,
+      email: {
+        equals: body.email,
+        mode: 'insensitive',
+      },
     }
     const user: User = await this.prisma.user.findFirst({
       where,
     })
     if (!user) {
       throw new HttpException(
-        {
-          statusCode: HttpStatus.NOT_FOUND,
-          message: HTTP_MESSAGES.USER_NOT_FOUND,
-        },
+        HTTP_MESSAGES.USER_NOT_FOUND,
         HttpStatus.NOT_FOUND,
       )
     }
@@ -56,10 +56,7 @@ export class AuthService {
     )
     if (!isCorrectPass) {
       throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: HTTP_MESSAGES.WRONG_PASSWORD,
-        },
+        HTTP_MESSAGES.WRONG_PASSWORD,
         HttpStatus.BAD_REQUEST,
       )
     }
@@ -100,13 +97,7 @@ export class AuthService {
       if (error.message === HTTP_MESSAGES.EXPIRED_TOKEN) {
         statusCode = HttpStatus.UNAUTHORIZED
       }
-      throw new HttpException(
-        {
-          statusCode,
-          message: error.message,
-        },
-        statusCode,
-      )
+      throw new HttpException(error.message, statusCode)
     }
   }
 
@@ -114,17 +105,17 @@ export class AuthService {
     body: GenerateLinkDto,
   ): Promise<GenerateLinkResposeDto> {
     const where: Prisma.UserWhereInput = {
-      email: body.email,
+      email: {
+        equals: body.email,
+        mode: 'insensitive',
+      },
     }
     const user: User = await this.prisma.user.findFirst({
       where,
     })
     if (!user) {
       throw new HttpException(
-        {
-          statusCode: HttpStatus.NOT_FOUND,
-          message: HTTP_MESSAGES.USER_NOT_FOUND,
-        },
+        HTTP_MESSAGES.USER_NOT_FOUND,
         HttpStatus.NOT_FOUND,
       )
     }
@@ -165,10 +156,7 @@ export class AuthService {
 
     if (!token) {
       throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: HTTP_MESSAGES.RESTOR_LINK_TOKEN_NOT_FOUND,
-        },
+        HTTP_MESSAGES.RESTOR_LINK_TOKEN_NOT_FOUND,
         HttpStatus.BAD_REQUEST,
       )
     } else if (
@@ -181,10 +169,7 @@ export class AuthService {
         },
       })
       throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: HTTP_MESSAGES.RESTOR_LINK_EXPIRED,
-        },
+        HTTP_MESSAGES.RESTOR_LINK_EXPIRED,
         HttpStatus.BAD_REQUEST,
       )
     }
@@ -200,10 +185,7 @@ export class AuthService {
     })
     if (!user) {
       throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: HTTP_MESSAGES.USER_NOT_FOUND,
-        },
+        HTTP_MESSAGES.USER_NOT_FOUND,
         HttpStatus.BAD_REQUEST,
       )
     }
@@ -221,16 +203,18 @@ export class AuthService {
   async generateRegistrationOtp(body: GenerateRegistrationOtp) {
     const email = body.email
 
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: 'insensitive',
+        },
+      },
     })
 
     if (user) {
       throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: HTTP_MESSAGES.EMAIL_IS_EXISTS,
-        },
+        HTTP_MESSAGES.EMAIL_IS_EXISTS,
         HttpStatus.BAD_REQUEST,
       )
     }
@@ -298,13 +282,7 @@ export class AuthService {
 
       return { user, token: this.generateTokens(user.id, user.role) }
     } catch (error) {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: error.message,
-        },
-        HttpStatus.BAD_REQUEST,
-      )
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
