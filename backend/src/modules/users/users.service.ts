@@ -1,27 +1,29 @@
-import { PrismaService } from '@/core/prisma/prisma.service'
-import { Injectable } from '@nestjs/common'
-import { GetProfileResponseDto } from './dto/get-profile.dto'
-import { Prisma } from '@prisma/client'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { GetUserResponseDto } from '@/modules/users/dto/get-user.dto'
+import { UsersRepository } from '@/modules/users/users.repository'
+import { HTTP_MESSAGES } from '@/consts/http-messages'
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly repository: UsersRepository) {}
 
-  async getProfile(userId: string): Promise<GetProfileResponseDto> {
-    const where: Prisma.UserWhereUniqueInput = {
-      id: userId,
+  async getUser(userId: string): Promise<GetUserResponseDto> {
+    const user = await this.repository.getUser(userId)
+
+    if (!user) {
+      throw new HttpException(
+        HTTP_MESSAGES.RESTOR_LINK_TOKEN_NOT_FOUND,
+        HttpStatus.BAD_REQUEST,
+      )
     }
-    return await this.prisma.user.findUnique({
-      where,
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    })
+    delete user.password
+
+    return user
+  }
+
+  async deleteUser(userId: string) {
+    await this.getUser(userId)
+    await this.repository.deleteUser(userId)
+    return { message: HTTP_MESSAGES.USER_DELETED }
   }
 }

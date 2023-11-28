@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, HttpStatus } from '@nestjs/common'
+import { Controller, Get, UseGuards, HttpStatus, Delete } from '@nestjs/common'
 import {
   ApiTags,
   ApiBearerAuth,
@@ -9,7 +9,8 @@ import { UsersService } from '@/modules/users/users.service'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { IUser } from '@/modules/users/dto/user.interface'
 import { User } from '@/decorators/user.decorator'
-import { GetProfileResponseDto } from '@/modules/users/dto/get-profile.dto'
+import { GetUserResponseDto } from '@/modules/users/dto/get-user.dto'
+import { MessageResponseDto } from '@/decorators/message-response.dto'
 
 @ApiTags('User')
 @Controller({ path: 'users', version: '1' })
@@ -18,10 +19,19 @@ export class UsersController {
 
   @Get('account')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get user information' })
-  @ApiResponse({ status: HttpStatus.OK, type: GetProfileResponseDto })
+  @ApiOperation({ summary: 'Get user' })
+  @ApiResponse({ status: HttpStatus.OK, type: GetUserResponseDto })
   @UseGuards(JwtAuthGuard)
-  getProfile(@User() user: IUser): Promise<GetProfileResponseDto> {
-    return this.userService.getProfile(user.id)
+  getUser(@User() user: IUser): Promise<GetUserResponseDto> {
+    return this.userService.getUser(user.id)
+  }
+
+  @Delete('account')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete user' })
+  @ApiResponse({ status: HttpStatus.OK, type: MessageResponseDto })
+  @UseGuards(JwtAuthGuard)
+  deleteUser(@User() user: IUser): Promise<MessageResponseDto> {
+    return this.userService.deleteUser(user.id)
   }
 }

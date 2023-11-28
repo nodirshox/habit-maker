@@ -13,6 +13,7 @@ export const HTTP_MESSAGES = {
   EMAIL_IS_EXISTS: 'Email is already exists',
   INVALID_TOKEN: 'Token is invalid',
   EXPIRED_TOKEN: 'Token is expired',
+  USER_DELETED: 'User deleted',
 
   // Habit
   HABIT_NOT_FOUND: 'Habit not found',
