@@ -1,7 +1,5 @@
-import { GetProfileResponseDto } from '@/modules/users/dto/get-profile.dto'
+import { GetUserResponseDto } from '@/modules/users/dto/get-user.dto'
 import { ApiProperty } from '@nestjs/swagger'
-
-class UserInformation extends GetProfileResponseDto {}
 
 export class TokenDto {
   @ApiProperty({ description: "User's access token" })
@@ -13,7 +11,7 @@ export class TokenDto {
 
 export class LoginResponseDto {
   @ApiProperty({ description: 'User information' })
-  user: UserInformation
+  user: GetUserResponseDto
 
   @ApiProperty({ description: 'User tokens' })
   token: TokenDto
