@@ -4,8 +4,16 @@ import { AuthModule } from '@/modules/auth/auth.module'
 import { CoreModule } from '@/core/core.module'
 import { HabitsModule } from '@/modules/habits/habits.module'
 import { ActivityModule } from '@/modules/activities/activity.module'
+import { ScheduleModule } from '@nestjs/schedule'
 @Module({
-  imports: [UsersModule, AuthModule, CoreModule, HabitsModule, ActivityModule],
+  imports: [
+    ScheduleModule.forRoot(),
+    UsersModule,
+    AuthModule,
+    CoreModule,
+    HabitsModule,
+    ActivityModule,
+  ],
   controllers: [],
   providers: [],
 })
