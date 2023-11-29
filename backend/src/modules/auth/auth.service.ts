@@ -299,7 +299,7 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
   async deleteExpiredTokens() {
     const time = new Date()
     const timeYesterday = new Date(time.setDate(time.getDate() - 1))
