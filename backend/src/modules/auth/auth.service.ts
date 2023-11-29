@@ -23,6 +23,7 @@ import {
 import { EmailService } from '@/core/email/email.service'
 import { RefreshTokenDto } from '@/modules/auth/dto/refresh-token.dto'
 import { REFRESH_TOKEN_EXPIRATION_TIME } from '@/consts/tokens'
+import { Cron, CronExpression } from '@nestjs/schedule'
 
 @Injectable()
 export class AuthService {
@@ -296,5 +297,27 @@ export class AuthService {
     })
 
     return { accessToken, refreshToken }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  async deleteExpiredTokens() {
+    const time = new Date()
+    const timeYesterday = new Date(time.setDate(time.getDate() - 1))
+
+    await this.prisma.verificationCodes.deleteMany({
+      where: {
+        createdAt: {
+          lt: timeYesterday,
+        },
+      },
+    })
+
+    await this.prisma.restoreAccountToken.deleteMany({
+      where: {
+        createdAt: {
+          lt: timeYesterday,
+        },
+      },
+    })
   }
 }
