@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsString } from 'class-validator'
+import { Weekdays } from '@prisma/client'
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator'
 
 export class CreateHabitDto {
   @IsNotEmpty()
@@ -10,6 +17,26 @@ export class CreateHabitDto {
     example: 'No sugar',
   })
   title: string
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    description: 'Color',
+    required: true,
+    example: '#ddd',
+  })
+  color: string
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(7)
+  @ApiProperty({
+    description: 'Repeatitions',
+    required: true,
+    type: [String],
+    example: [Weekdays.MONDAY, Weekdays.WEDNESDAY, Weekdays.FRIDAY],
+  })
+  repeatitions: Weekdays[]
 }
 
 export class UpdateHabitDto {
@@ -21,4 +48,24 @@ export class UpdateHabitDto {
     example: 'No sugar',
   })
   title: string
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    description: 'Color',
+    required: true,
+    example: '#ddd',
+  })
+  color: string
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(7)
+  @ApiProperty({
+    description: 'Repeatitions',
+    required: true,
+    type: [String],
+    example: [Weekdays.MONDAY, Weekdays.WEDNESDAY, Weekdays.FRIDAY],
+  })
+  repeatitions: Weekdays[]
 }

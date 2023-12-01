@@ -45,15 +45,27 @@ model RestoreAccountToken {
 model Habit {
   id        String   @id @default(uuid())
   title     String
+  color     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
-  activities Activity[]
+  activities   Activity[]
+  repeatitions Repeatition[]
 
   @@map("habits")
+}
+
+model Repeatition {
+  id      String   @id @default(uuid())
+  weekday Weekdays
+
+  habit   Habit  @relation(fields: [habitId], references: [id])
+  habitId String @map("habit_id")
+
+  @@map("repeatitions")
 }
 
 model Activity {
@@ -69,4 +81,14 @@ model Activity {
 enum UserRoles {
   ADMIN
   USER
+}
+
+enum Weekdays {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }

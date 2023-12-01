@@ -34,12 +34,9 @@ export class HabitController {
 
   @Post()
   @ApiOperation({ summary: 'Create habit' })
-  @ApiResponse({ status: HttpStatus.CREATED, type: HabitResponseDto })
+  @ApiResponse({ status: HttpStatus.CREATED })
   @UseGuards(JwtAuthGuard)
-  createHabit(
-    @User() user: IUser,
-    @Body() body: CreateHabitDto,
-  ): Promise<CreateHabitDto> {
+  createHabit(@User() user: IUser, @Body() body: CreateHabitDto) {
     return this.service.createHabit(body, user.id)
   }
 
