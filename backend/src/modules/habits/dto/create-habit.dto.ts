@@ -31,12 +31,12 @@ export class CreateHabitDto {
   @ArrayMinSize(1)
   @ArrayMaxSize(7)
   @ApiProperty({
-    description: 'Repeatitions',
+    description: 'Repetitions',
     required: true,
     type: [String],
     example: [Weekdays.MONDAY, Weekdays.WEDNESDAY, Weekdays.FRIDAY],
   })
-  repeatitions: Weekdays[]
+  repetitions: Weekdays[]
 }
 
 export class UpdateHabitDto {
@@ -62,10 +62,10 @@ export class UpdateHabitDto {
   @ArrayMinSize(1)
   @ArrayMaxSize(7)
   @ApiProperty({
-    description: 'Repeatitions',
+    description: 'Repetitions',
     required: true,
     type: [String],
     example: [Weekdays.MONDAY, Weekdays.WEDNESDAY, Weekdays.FRIDAY],
   })
-  repeatitions: Weekdays[]
+  repetitions: Weekdays[]
 }

@@ -11,13 +11,13 @@ CREATE TYPE "Weekdays" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'F
 ALTER TABLE "habits" ADD COLUMN     "color" TEXT NOT NULL;
 
 -- CreateTable
-CREATE TABLE "repeatitions" (
+CREATE TABLE "repetitions" (
     "id" TEXT NOT NULL,
     "weekday" "Weekdays" NOT NULL,
     "habit_id" TEXT NOT NULL,
 
-    CONSTRAINT "repeatitions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "repetitions_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
-ALTER TABLE "repeatitions" ADD CONSTRAINT "repeatitions_habit_id_fkey" FOREIGN KEY ("habit_id") REFERENCES "habits"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "repetitions" ADD CONSTRAINT "repetitions_habit_id_fkey" FOREIGN KEY ("habit_id") REFERENCES "habits"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

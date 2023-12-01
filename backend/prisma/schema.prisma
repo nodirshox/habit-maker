@@ -52,20 +52,20 @@ model Habit {
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
-  activities   Activity[]
-  repeatitions Repeatition[]
+  activities  Activity[]
+  repetitions Repetition[]
 
   @@map("habits")
 }
 
-model Repeatition {
+model Repetition {
   id      String   @id @default(uuid())
   weekday Weekdays
 
   habit   Habit  @relation(fields: [habitId], references: [id])
   habitId String @map("habit_id")
 
-  @@map("repeatitions")
+  @@map("repetitions")
 }
 
 model Activity {
