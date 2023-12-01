@@ -1,14 +1,8 @@
-/*
-  Warnings:
-
-  - Added the required column `color` to the `habits` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "Weekdays" AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY');
 
 -- AlterTable
-ALTER TABLE "habits" ADD COLUMN     "color" TEXT NOT NULL;
+ALTER TABLE "habits" ADD COLUMN     "color" TEXT NOT NULL DEFAULT '#808080';
 
 -- CreateTable
 CREATE TABLE "repetitions" (

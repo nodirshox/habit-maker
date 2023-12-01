@@ -26,14 +26,22 @@ export class HabitsService {
 
   async getHabits(userId: string) {
     const habits = await this.habitsRepository.findHabitsByUser(userId)
-    return { habits }
+    const convertedHabits = habits.map((habit) => {
+      return {
+        ...habit,
+        repetitions: habit.repetitions.map((repetition) => repetition.weekday),
+      }
+    })
+    return { habits: convertedHabits }
   }
 
   async getHabit(habitId: string, userId: string) {
     await this.ensureHabitExistsAndBelongsToUser(habitId, userId)
     const habit = await this.habitsRepository.findHabitByIdWithActivies(habitId)
-
-    return habit
+    const repetitions = habit.repetitions.map(
+      (repetition) => repetition.weekday,
+    )
+    return { ...habit, repetitions }
   }
 
   async updateHabit(

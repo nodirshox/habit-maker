@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@/core/prisma/prisma.service'
-import { Habit, Weekdays } from '@prisma/client'
+import { Habit } from '@prisma/client'
 import {
   CreateHabitDto,
   UpdateHabitDto,
@@ -39,7 +39,11 @@ export class HabitsRepository {
         id: true,
         title: true,
         color: true,
-        repetitions: true,
+        repetitions: {
+          select: {
+            weekday: true,
+          },
+        },
         createdAt: true,
         activities: {
           select: {
@@ -63,7 +67,11 @@ export class HabitsRepository {
         id: true,
         title: true,
         color: true,
-        repetitions: true,
+        repetitions: {
+          select: {
+            weekday: true,
+          },
+        },
         createdAt: true,
         activities: {
           select: {
@@ -81,9 +89,7 @@ export class HabitsRepository {
         title: body.title,
         color: body.color,
         repetitions: {
-          deleteMany: {
-            habitId,
-          },
+          deleteMany: { habitId },
           create: body.repetitions.map((day) => {
             return {
               weekday: day,
@@ -96,6 +102,7 @@ export class HabitsRepository {
 
   async deleteHabit(habitId: string): Promise<void> {
     await this.prisma.$transaction([
+      this.prisma.repetition.deleteMany({ where: { habitId } }),
       this.prisma.activity.deleteMany({ where: { habitId } }),
       this.prisma.habit.delete({ where: { id: habitId } }),
     ])

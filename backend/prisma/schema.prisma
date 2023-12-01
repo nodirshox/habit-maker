@@ -45,7 +45,7 @@ model RestoreAccountToken {
 model Habit {
   id        String   @id @default(uuid())
   title     String
-  color     String
+  color     String   @default("#808080")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
