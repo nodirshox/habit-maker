@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@/core/prisma/prisma.service'
-import { Habit, Weekdays } from '@prisma/client'
+import { Habit } from '@prisma/client'
 import {
   CreateHabitDto,
   UpdateHabitDto,
@@ -21,11 +21,17 @@ export class HabitsRepository {
           },
         },
         repetitions: {
-          create: body.repetitions.map((day) => {
-            return {
-              weekday: day,
-            }
-          }),
+          create: {
+            weekdays: body.weekdays.map((day) => {
+              return {
+                weekday: day.day,
+                isSelected: day.isSelected,
+              }
+            }),
+            numberOfDays: body.numberOfDays,
+            notifyTime: body.notifyTime,
+            showNotification: body.showNotification,
+          },
         },
       },
     })
@@ -53,6 +59,10 @@ export class HabitsRepository {
   async findHabitById(habitId: string) {
     return this.prisma.habit.findUnique({
       where: { id: habitId },
+      include: {
+        activities: true,
+        repetitions: true,
+      },
     })
   }
 
@@ -84,11 +94,17 @@ export class HabitsRepository {
           deleteMany: {
             habitId,
           },
-          create: body.repetitions.map((day) => {
-            return {
-              weekday: day,
-            }
-          }),
+          create: {
+            weekdays: body.weekdays.map((day) => {
+              return {
+                weekday: day.day,
+                isSelected: day.isSelected,
+              }
+            }),
+            numberOfDays: body.numberOfDays,
+            notifyTime: body.notifyTime,
+            showNotification: body.showNotification,
+          },
         },
       },
     })
