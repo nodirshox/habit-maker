@@ -90,9 +90,8 @@ export class UpdateHabitDto {
   })
   color: string
 
+  @IsOptional()
   @IsArray()
-  @IsNotEmpty()
-  type: () => JSON
   @ApiProperty({
     description: 'WeekDays',
     required: true,
@@ -105,10 +104,8 @@ export class UpdateHabitDto {
   })
   weekdays: { day: string; isSelected: boolean }[]
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(1)
-  @Max(7)
   @ApiProperty({
     description: 'Number of Days',
     required: true,

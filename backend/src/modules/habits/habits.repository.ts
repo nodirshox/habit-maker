@@ -96,13 +96,14 @@ export class HabitsRepository {
             habitId,
           },
           create: {
-            weekdays: body.weekdays.map((day) => {
-              return {
-                weekday: day.day,
-                isSelected: day.isSelected,
-              }
-            }),
-            numberOfDays: body.numberOfDays,
+            weekdays:
+              body.weekdays?.map((day) => {
+                return {
+                  weekday: day.day,
+                  isSelected: day.isSelected,
+                }
+              }) || '',
+            numberOfDays: body?.numberOfDays || 0,
             notifyTime: body.notifyTime,
             showNotification: body.showNotification,
           },
