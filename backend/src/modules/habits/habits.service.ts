@@ -20,28 +20,34 @@ export class HabitsService {
     body: CreateHabitDto,
     userId: string,
   ): Promise<HabitResponseDto> {
+    if (body.numberOfDays && body.weekdays) {
+      throw new HttpException(
+        'Only one of the fields can be entered',
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    if (!body.numberOfDays && !body.weekdays) {
+      throw new HttpException(
+        'Number of days or weekdays not entered',
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
     const habit = await this.habitsRepository.createHabit(body, userId)
     return habit
   }
 
   async getHabits(userId: string) {
     const habits = await this.habitsRepository.findHabitsByUser(userId)
-    const convertedHabits = habits.map((habit) => {
-      return {
-        ...habit,
-        repetitions: habit.repetitions.map((repetition) => repetition.weekday),
-      }
-    })
-    return { habits: convertedHabits }
+    return { habits }
   }
 
   async getHabit(habitId: string, userId: string) {
     await this.ensureHabitExistsAndBelongsToUser(habitId, userId)
     const habit = await this.habitsRepository.findHabitByIdWithActivies(habitId)
-    const repetitions = habit.repetitions.map(
-      (repetition) => repetition.weekday,
-    )
-    return { ...habit, repetitions }
+
+    return habit
   }
 
   async updateHabit(
