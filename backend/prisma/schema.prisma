@@ -45,7 +45,7 @@ model RestoreAccountToken {
 model Habit {
   id        String   @id @default(uuid())
   title     String
-  color     String   @default("#808080")
+  color     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -59,8 +59,11 @@ model Habit {
 }
 
 model Repetition {
-  id      String   @id @default(uuid())
-  weekday Weekdays
+  id               String  @id @default(uuid())
+  weekdays         Json?
+  numberOfDays     Int?    @default(0) @map("number_of_days")
+  notifyTime       String  @default("12:00") @map("notify_time")
+  showNotification Boolean @default(false) @map("show_notification")
 
   habit   Habit  @relation(fields: [habitId], references: [id])
   habitId String @map("habit_id")
@@ -81,14 +84,4 @@ model Activity {
 enum UserRoles {
   ADMIN
   USER
-}
-
-enum Weekdays {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
 }
