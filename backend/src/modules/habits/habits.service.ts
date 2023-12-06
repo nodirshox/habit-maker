@@ -20,6 +20,20 @@ export class HabitsService {
     body: CreateHabitDto,
     userId: string,
   ): Promise<HabitResponseDto> {
+    if (body.numberOfDays && body.weekdays) {
+      throw new HttpException(
+        'Only one of the fields can be entered',
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    if (!body.numberOfDays && !body.weekdays) {
+      throw new HttpException(
+        'Number of days or weekdays not entered',
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
     const habit = await this.habitsRepository.createHabit(body, userId)
     return habit
   }

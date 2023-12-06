@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Max,
   Min,
@@ -28,8 +29,8 @@ export class CreateHabitDto {
   })
   color: string
 
+  @IsOptional()
   @IsArray()
-  @IsNotEmpty()
   @ApiProperty({
     description: 'WeekDays',
     required: true,
@@ -42,10 +43,8 @@ export class CreateHabitDto {
   })
   weekdays: { day: string; isSelected: boolean }[]
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  @Min(1)
-  @Max(7)
   @ApiProperty({
     description: 'Number of Days',
     required: true,
