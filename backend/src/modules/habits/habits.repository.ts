@@ -20,7 +20,7 @@ export class HabitsRepository {
             id: userId,
           },
         },
-        repetitions: {
+        repetition: {
           create: {
             weekdays:
               body.weekdays?.map((day) => {
@@ -46,7 +46,7 @@ export class HabitsRepository {
         id: true,
         title: true,
         color: true,
-        repetitions: true,
+        repetition: true,
         createdAt: true,
         activities: {
           select: {
@@ -62,7 +62,7 @@ export class HabitsRepository {
       where: { id: habitId },
       include: {
         activities: true,
-        repetitions: true,
+        repetition: true,
       },
     })
   }
@@ -74,7 +74,7 @@ export class HabitsRepository {
         id: true,
         title: true,
         color: true,
-        repetitions: true,
+        repetition: true,
         createdAt: true,
         activities: {
           select: {
@@ -91,8 +91,8 @@ export class HabitsRepository {
       data: {
         title: body.title,
         color: body.color,
-        repetitions: {
-          deleteMany: {
+        repetition: {
+          delete: {
             habitId,
           },
           create: {
