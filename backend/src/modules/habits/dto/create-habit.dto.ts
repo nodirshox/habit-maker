@@ -14,12 +14,12 @@ export class CreateRepetitionDto {
   @ApiProperty({
     description: 'Weekdays',
     example: [
-      { day: 'Monday', isSelected: false },
-      { day: 'Tuesday', isSelected: false },
-      { day: 'Wednesday', isSelected: false },
+      { weekday: 'Monday', isSelected: false },
+      { weekday: 'Tuesday', isSelected: false },
+      { weekday: 'Wednesday', isSelected: false },
     ],
   })
-  weekdays: { day: string; isSelected: boolean }[]
+  weekdays: { weekday: string; isSelected: boolean }[]
 
   @IsNumber()
   @ApiProperty({
@@ -67,9 +67,9 @@ export class CreateHabitDto {
     description: 'Repetition details',
     example: {
       weekdays: [
-        { day: 'Monday', isSelected: false },
-        { day: 'Tuesday', isSelected: false },
-        { day: 'Wednesday', isSelected: false },
+        { weekday: 'Monday', isSelected: false },
+        { weekday: 'Tuesday', isSelected: false },
+        { weekday: 'Wednesday', isSelected: false },
       ],
       numberOfDays: 7,
       notifyTime: '12:30',

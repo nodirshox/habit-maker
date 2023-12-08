@@ -25,7 +25,7 @@ export class HabitsRepository {
             weekdays:
               body.repetition.weekdays?.map((day) => {
                 return {
-                  weekday: day.day,
+                  weekday: day.weekday,
                   isSelected: day.isSelected,
                 }
               }) || [],
