@@ -93,16 +93,16 @@ export class UpdateHabitDto {
   @IsOptional()
   @IsArray()
   @ApiProperty({
-    description: 'WeekDays',
+    description: 'Weekdays',
     required: true,
     // type: [{ day: String, isSelected: Boolean }],
     example: [
-      { day: 'Monday', isSelected: false },
-      { day: 'Tuesday', isSelected: false },
-      { day: 'Wednesday', isSelected: false },
+      { weekday: 'Monday', isSelected: false },
+      { weekday: 'Tuesday', isSelected: false },
+      { weekday: 'Wednesday', isSelected: false },
     ],
   })
-  weekdays: { day: string; isSelected: boolean }[]
+  weekdays: { weekday: string; isSelected: boolean }[]
 
   @IsOptional()
   @IsNumber()
@@ -113,7 +113,7 @@ export class UpdateHabitDto {
   })
   numberOfDays: number
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty({
     description: 'Notification Time',
@@ -122,7 +122,7 @@ export class UpdateHabitDto {
   })
   notifyTime: string
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   @ApiProperty({
     description: 'Show Notification',
