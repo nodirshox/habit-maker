@@ -23,15 +23,15 @@ export class HabitsRepository {
         repetition: {
           create: {
             weekdays:
-              body.weekdays?.map((day) => {
+              body.repetition.weekdays?.map((day) => {
                 return {
                   weekday: day.day,
                   isSelected: day.isSelected,
                 }
-              }) || '',
-            numberOfDays: body.numberOfDays || 0,
-            notifyTime: body.notifyTime,
-            showNotification: body.showNotification,
+              }) || [],
+            numberOfDays: body.repetition.numberOfDays || 0,
+            notifyTime: body.repetition.notifyTime,
+            showNotification: body.repetition.showNotification,
           },
         },
       },
