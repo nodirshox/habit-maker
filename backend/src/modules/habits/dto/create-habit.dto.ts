@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 import {
   IsArray,
   IsBoolean,
@@ -6,9 +7,41 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Max,
-  Min,
 } from 'class-validator'
+
+export class CreateRepetitionDto {
+  @IsArray()
+  @ApiProperty({
+    description: 'Weekdays',
+    example: [
+      { weekday: 'Monday', isSelected: false },
+      { weekday: 'Tuesday', isSelected: false },
+      { weekday: 'Wednesday', isSelected: false },
+    ],
+  })
+  weekdays: { weekday: string; isSelected: boolean }[]
+
+  @IsNumber()
+  @ApiProperty({
+    description: 'Number of Days',
+    example: 7,
+  })
+  numberOfDays: number
+
+  @IsString()
+  @ApiProperty({
+    description: 'Notification Time',
+    example: '12:30',
+  })
+  notifyTime: string
+
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Show Notification',
+    example: true,
+  })
+  showNotification: boolean
+}
 
 export class CreateHabitDto {
   @IsNotEmpty()
@@ -29,46 +62,21 @@ export class CreateHabitDto {
   })
   color: string
 
-  @IsOptional()
-  @IsArray()
+  @Type(() => CreateRepetitionDto)
   @ApiProperty({
-    description: 'WeekDays',
-    required: true,
-    // type: [{ day: String, isSelected: Boolean }],
-    example: [
-      { day: 'Monday', isSelected: false },
-      { day: 'Tuesday', isSelected: false },
-      { day: 'Wednesday', isSelected: false },
-    ],
+    description: 'Repetition details',
+    example: {
+      weekdays: [
+        { weekday: 'Monday', isSelected: false },
+        { weekday: 'Tuesday', isSelected: false },
+        { weekday: 'Wednesday', isSelected: false },
+      ],
+      numberOfDays: 7,
+      notifyTime: '12:30',
+      showNotification: true,
+    },
   })
-  weekdays: { day: string; isSelected: boolean }[]
-
-  @IsOptional()
-  @IsNumber()
-  @ApiProperty({
-    description: 'Number of Days',
-    required: true,
-    example: 7,
-  })
-  numberOfDays: number
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description: 'Notification Time',
-    required: true,
-    example: '12:30',
-  })
-  notifyTime: string
-
-  @IsNotEmpty()
-  @IsBoolean()
-  @ApiProperty({
-    description: 'Show Notification',
-    required: true,
-    example: true,
-  })
-  showNotification: boolean
+  repetition: CreateRepetitionDto
 }
 
 export class UpdateHabitDto {
