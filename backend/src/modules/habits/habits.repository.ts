@@ -85,27 +85,26 @@ export class HabitsRepository {
     })
   }
 
-  async updateHabit(habitId: string, body: UpdateHabitDto): Promise<Habit> {
+  async updateHabit(habitId: string, body: UpdateHabitDto) {
+    await this.findHabitById(habitId)
     return this.prisma.habit.update({
       where: { id: habitId },
       data: {
         title: body.title,
         color: body.color,
         repetition: {
-          delete: {
-            habitId,
-          },
+          delete: {},
           create: {
             weekdays:
-              body.weekdays?.map((day) => {
+              body.repetition.weekdays?.map((day) => {
                 return {
                   weekday: day.weekday,
                   isSelected: day.isSelected,
                 }
-              }) || '',
-            numberOfDays: body?.numberOfDays || 0,
-            notifyTime: body?.notifyTime,
-            showNotification: body?.showNotification,
+              }) || [],
+            numberOfDays: body.repetition.numberOfDays || 0,
+            notifyTime: body.repetition.notifyTime,
+            showNotification: body.repetition.showNotification,
           },
         },
       },
