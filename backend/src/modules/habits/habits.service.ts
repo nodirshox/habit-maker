@@ -60,7 +60,7 @@ export class HabitsService {
     return habit
   }
 
-  async deleteHabit(habitId: string, userId: string): Promise<void> {
+  async deleteHabit(habitId: string, userId: string) {
     await this.ensureHabitExistsAndBelongsToUser(habitId, userId)
     await this.habitsRepository.deleteHabit(habitId)
   }
