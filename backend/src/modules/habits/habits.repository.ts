@@ -111,10 +111,15 @@ export class HabitsRepository {
     })
   }
 
-  async deleteHabit(habitId: string): Promise<void> {
+  async deleteHabit(habitId: string) {
     await this.prisma.$transaction([
+      this.prisma.repetition.deleteMany({ where: { habitId } }),
       this.prisma.activity.deleteMany({ where: { habitId } }),
       this.prisma.habit.delete({ where: { id: habitId } }),
     ])
+
+    return {
+      message: 'Deleted successfully',
+    }
   }
 }
