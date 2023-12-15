@@ -119,7 +119,7 @@ export class HabitsRepository {
     ])
 
     return {
-      message: 'Deleted successfully',
+      message: `Habit with ID = ${habitId} is deleted successfully`,
     }
   }
 }
