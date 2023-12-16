@@ -33,6 +33,36 @@ export class RepetitionDto {
   @ApiProperty({
     description: 'Weekdays',
     type: [WeekdaysDto],
+    example: [
+      {
+        weekday: Weekday.MONDAY,
+        isSelected: false,
+      },
+      {
+        weekday: Weekday.THURSDAY,
+        isSelected: false,
+      },
+      {
+        weekday: Weekday.WEDNESDAY,
+        isSelected: false,
+      },
+      {
+        weekday: Weekday.THURSDAY,
+        isSelected: false,
+      },
+      {
+        weekday: Weekday.FRIDAY,
+        isSelected: false,
+      },
+      {
+        weekday: Weekday.SATURDAY,
+        isSelected: false,
+      },
+      {
+        weekday: Weekday.SUNDAY,
+        isSelected: false,
+      },
+    ],
   })
   weekdays: WeekdaysDto[]
 
@@ -75,7 +105,7 @@ export class CreateHabitDto {
   @ApiProperty({
     description: 'Color',
     required: true,
-    example: '#ddd',
+    example: '1',
   })
   color: string
 

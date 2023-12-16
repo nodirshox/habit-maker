@@ -75,7 +75,7 @@ model Weekdays {
   id String @id @default(uuid())
 
   weekday    Weekday
-  isSelected Boolean @default(false)
+  isSelected Boolean @default(false) @map("is_selected")
 
   repetition   Repetition @relation(fields: [repetitionId], references: [id])
   repetitionId String     @map("repetition_id")
