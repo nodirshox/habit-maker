@@ -20,22 +20,14 @@ export class HabitsService {
     body: CreateHabitDto,
     userId: string,
   ): Promise<HabitResponseDto> {
-    if (body.repetition.numberOfDays && body.repetition.weekdays) {
-      throw new HttpException(
-        'Only one of the fields can be entered',
-        HttpStatus.BAD_REQUEST,
-      )
+    if (
+      body.repetition.weekdays.filter((weekday) => weekday.isSelected).length >
+      0
+    ) {
+      body.repetition.numberOfDays = 0
     }
 
-    if (!body.repetition.numberOfDays && !body.repetition.weekdays) {
-      throw new HttpException(
-        'Number of days or weekdays not entered',
-        HttpStatus.BAD_REQUEST,
-      )
-    }
-
-    const habit = await this.habitsRepository.createHabit(body, userId)
-    return habit
+    return this.habitsRepository.createHabit(body, userId)
   }
 
   async getHabits(userId: string) {
@@ -56,13 +48,26 @@ export class HabitsService {
     userId: string,
   ): Promise<HabitResponseDto> {
     await this.ensureHabitExistsAndBelongsToUser(habitId, userId)
-    const habit = await this.habitsRepository.updateHabit(habitId, body)
-    return habit
+
+    // TODO: Re-use from create
+    if (
+      body.repetition.weekdays.filter((weekday) => weekday.isSelected).length >
+      0
+    ) {
+      body.repetition.numberOfDays = 0
+    }
+
+    const result = await this.habitsRepository.updateHabit(habitId, body)
+    return result[2]
   }
 
   async deleteHabit(habitId: string, userId: string) {
     await this.ensureHabitExistsAndBelongsToUser(habitId, userId)
     await this.habitsRepository.deleteHabit(habitId)
+
+    return {
+      message: `Habit with ID = ${habitId} is deleted successfully`,
+    }
   }
 
   async ensureHabitExistsAndBelongsToUser(

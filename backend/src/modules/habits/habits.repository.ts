@@ -22,16 +22,17 @@ export class HabitsRepository {
         },
         repetition: {
           create: {
-            weekdays:
-              body.repetition.weekdays?.map((day) => {
-                return {
-                  weekday: day.weekday,
-                  isSelected: day.isSelected,
-                }
-              }) || [],
-            numberOfDays: body.repetition.numberOfDays || 0,
+            numberOfDays: body.repetition.numberOfDays,
             notifyTime: body.repetition.notifyTime,
             showNotification: body.repetition.showNotification,
+            weekdays: {
+              create: body.repetition.weekdays.map((weekday) => {
+                return {
+                  weekday: weekday.weekday,
+                  isSelected: weekday.isSelected,
+                }
+              }),
+            },
           },
         },
       },
@@ -46,7 +47,19 @@ export class HabitsRepository {
         id: true,
         title: true,
         color: true,
-        repetition: true,
+        repetition: {
+          select: {
+            numberOfDays: true,
+            notifyTime: true,
+            showNotification: true,
+            weekdays: {
+              select: {
+                weekday: true,
+                isSelected: true,
+              },
+            },
+          },
+        },
         createdAt: true,
         activities: {
           select: {
@@ -60,10 +73,6 @@ export class HabitsRepository {
   async findHabitById(habitId: string) {
     return this.prisma.habit.findUnique({
       where: { id: habitId },
-      include: {
-        activities: true,
-        repetition: true,
-      },
     })
   }
 
@@ -74,7 +83,20 @@ export class HabitsRepository {
         id: true,
         title: true,
         color: true,
-        repetition: true,
+        userId: true,
+        repetition: {
+          select: {
+            numberOfDays: true,
+            notifyTime: true,
+            showNotification: true,
+            weekdays: {
+              select: {
+                weekday: true,
+                isSelected: true,
+              },
+            },
+          },
+        },
         createdAt: true,
         activities: {
           select: {
@@ -86,40 +108,63 @@ export class HabitsRepository {
   }
 
   async updateHabit(habitId: string, body: UpdateHabitDto) {
-    await this.findHabitById(habitId)
-    return this.prisma.habit.update({
+    const repetitionIds = await this.prisma.repetition.findMany({
+      where: { habitId },
+      select: {
+        id: true,
+      },
+    })
+
+    const deleteWeekDays = this.prisma.weekdays.deleteMany({
+      where: { repetitionId: { in: repetitionIds.map((rp) => rp.id) } },
+    })
+    const deleteRepetition = this.prisma.repetition.deleteMany({
+      where: { habitId },
+    })
+    const updateHabit = this.prisma.habit.update({
       where: { id: habitId },
       data: {
         title: body.title,
         color: body.color,
         repetition: {
-          delete: {},
           create: {
-            weekdays:
-              body.repetition.weekdays?.map((day) => {
-                return {
-                  weekday: day.weekday,
-                  isSelected: day.isSelected,
-                }
-              }) || [],
-            numberOfDays: body.repetition.numberOfDays || 0,
+            numberOfDays: body.repetition.numberOfDays,
             notifyTime: body.repetition.notifyTime,
             showNotification: body.repetition.showNotification,
+            weekdays: {
+              create: body.repetition.weekdays.map((weekday) => {
+                return {
+                  weekday: weekday.weekday,
+                  isSelected: weekday.isSelected,
+                }
+              }),
+            },
           },
         },
       },
     })
+    return this.prisma.$transaction([
+      deleteWeekDays,
+      deleteRepetition,
+      updateHabit,
+    ])
   }
 
   async deleteHabit(habitId: string) {
-    await this.prisma.$transaction([
+    const repetitionIds = await this.prisma.repetition.findMany({
+      where: { habitId },
+      select: {
+        id: true,
+      },
+    })
+
+    return this.prisma.$transaction([
+      this.prisma.weekdays.deleteMany({
+        where: { repetitionId: { in: repetitionIds.map((rp) => rp.id) } },
+      }),
       this.prisma.repetition.deleteMany({ where: { habitId } }),
       this.prisma.activity.deleteMany({ where: { habitId } }),
       this.prisma.habit.delete({ where: { id: habitId } }),
     ])
-
-    return {
-      message: `Habit with ID = ${habitId} is deleted successfully`,
-    }
   }
 }
