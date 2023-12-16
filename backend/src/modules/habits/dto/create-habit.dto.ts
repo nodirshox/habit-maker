@@ -1,30 +1,47 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { Weekday } from '@prisma/client'
 import { Type } from 'class-transformer'
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
   IsArray,
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator'
 
-export class CreateRepetitionDto {
+export class WeekdaysDto {
+  @IsEnum(Weekday)
+  @ApiProperty({ description: 'Weekday', enum: Weekday })
+  weekday: Weekday
+
+  @IsBoolean()
+  @ApiProperty({ description: 'Selected value', type: Boolean })
+  isSelected: boolean
+}
+
+export class RepetitionDto {
   @IsArray()
+  @ArrayMinSize(7)
+  @ArrayMaxSize(7)
+  @Type(() => WeekdaysDto)
+  @ValidateNested({ each: true })
   @ApiProperty({
     description: 'Weekdays',
-    example: [
-      { weekday: 'Monday', isSelected: false },
-      { weekday: 'Tuesday', isSelected: false },
-      { weekday: 'Wednesday', isSelected: false },
-    ],
+    type: [WeekdaysDto],
   })
-  weekdays: { weekday: string; isSelected: boolean }[]
+  weekdays: WeekdaysDto[]
 
   @IsNumber()
+  @IsOptional()
   @ApiProperty({
     description: 'Number of Days',
     example: 7,
+    default: 0,
   })
   numberOfDays: number
 
@@ -62,55 +79,13 @@ export class CreateHabitDto {
   })
   color: string
 
-  @Type(() => CreateRepetitionDto)
+  @Type(() => RepetitionDto)
+  @ValidateNested({ each: true })
   @ApiProperty({
-    description: 'Repetition details',
-    example: {
-      weekdays: [
-        { weekday: 'Monday', isSelected: false },
-        { weekday: 'Tuesday', isSelected: false },
-        { weekday: 'Wednesday', isSelected: false },
-      ],
-      numberOfDays: 7,
-      notifyTime: '12:30',
-      showNotification: true,
-    },
+    description: 'Repetition',
+    type: RepetitionDto,
   })
-  repetition: CreateRepetitionDto
+  repetition: RepetitionDto
 }
 
-export class UpdateHabitDto {
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description: 'Name',
-    required: true,
-    example: 'No sugar',
-  })
-  title: string
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description: 'Color',
-    required: true,
-    example: '#ddd',
-  })
-  color: string
-
-  @Type(() => CreateRepetitionDto)
-  @ApiProperty({
-    description: 'Repetition details',
-    example: {
-      weekdays: [
-        { weekday: 'Monday', isSelected: false },
-        { weekday: 'Tuesday', isSelected: false },
-        { weekday: 'Wednesday', isSelected: false },
-      ],
-      numberOfDays: 7,
-      notifyTime: '12:30',
-      showNotification: true,
-    },
-  })
-  repetition: CreateRepetitionDto
-}
+export class UpdateHabitDto extends CreateHabitDto {}

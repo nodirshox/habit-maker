@@ -60,15 +60,37 @@ model Habit {
 
 model Repetition {
   id               String  @id @default(uuid())
-  weekdays         Json?   @default("[]")
-  numberOfDays     Int?    @default(0) @map("number_of_days")
+  numberOfDays     Int     @default(0) @map("number_of_days")
   notifyTime       String  @default("12:00") @map("notify_time")
   showNotification Boolean @default(false) @map("show_notification")
 
-  habitId String @unique @map("habit_id")
-  habit   Habit  @relation(fields: [habitId], references: [id])
+  habitId  String     @unique @map("habit_id")
+  habit    Habit      @relation(fields: [habitId], references: [id])
+  weekdays Weekdays[]
 
   @@map("repetitions")
+}
+
+model Weekdays {
+  id String @id @default(uuid())
+
+  weekday    Weekday
+  isSelected Boolean @default(false)
+
+  repetition   Repetition @relation(fields: [repetitionId], references: [id])
+  repetitionId String     @map("repetition_id")
+
+  @@map("weekdays")
+}
+
+enum Weekday {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 model Activity {
