@@ -57,7 +57,8 @@ export class HabitsService {
       body.repetition.numberOfDays = 0
     }
 
-    return this.habitsRepository.updateHabit(habitId, body)
+    const result = await this.habitsRepository.updateHabit(habitId, body)
+    return result[2]
   }
 
   async deleteHabit(habitId: string, userId: string) {
