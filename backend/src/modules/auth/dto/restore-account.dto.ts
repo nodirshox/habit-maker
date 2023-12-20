@@ -41,8 +41,8 @@ export class RestoreAccountErrorResponseDto {
   @ApiProperty({
     description: 'Error message',
     example: [
-      HTTP_MESSAGES.RESTOR_LINK_TOKEN_NOT_FOUND,
-      HTTP_MESSAGES.RESTOR_LINK_EXPIRED,
+      HTTP_MESSAGES.RESTORE_LINK_TOKEN_NOT_FOUND,
+      HTTP_MESSAGES.RESTORE_LINK_EXPIRED,
       HTTP_MESSAGES.USER_NOT_FOUND,
     ],
   })

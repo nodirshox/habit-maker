@@ -157,7 +157,7 @@ export class AuthService {
 
     if (!token) {
       throw new HttpException(
-        HTTP_MESSAGES.RESTOR_LINK_TOKEN_NOT_FOUND,
+        HTTP_MESSAGES.RESTORE_LINK_TOKEN_NOT_FOUND,
         HttpStatus.BAD_REQUEST,
       )
     } else if (
@@ -170,7 +170,7 @@ export class AuthService {
         },
       })
       throw new HttpException(
-        HTTP_MESSAGES.RESTOR_LINK_EXPIRED,
+        HTTP_MESSAGES.RESTORE_LINK_EXPIRED,
         HttpStatus.BAD_REQUEST,
       )
     }
