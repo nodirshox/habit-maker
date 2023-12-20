@@ -13,31 +13,6 @@ export class UsersRepository {
   }
 
   async deleteUser(userId: string) {
-    const operations = []
-    const habits = await this.prisma.habit.findMany({
-      where: { userId },
-      select: { id: true },
-    })
-    const habitIds = habits.map((habit) => habit.id)
-
-    operations.push(
-      this.prisma.activity.deleteMany({
-        where: {
-          habitId: {
-            in: habitIds,
-          },
-        },
-      }),
-    )
-
-    operations.push(
-      this.prisma.habit.deleteMany({
-        where: { userId },
-      }),
-    )
-
-    operations.push(this.prisma.user.delete({ where: { id: userId } }))
-
-    return this.prisma.$transaction(operations)
+    return this.prisma.user.delete({ where: { id: userId } })
   }
 }
