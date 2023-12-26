@@ -10,7 +10,7 @@ export class ActivityRepository {
   async createActivity(body: CreateActivityDto): Promise<Activity> {
     return this.prisma.activity.create({
       data: {
-        date: body.date,
+        date: new Date(body.date),
         habit: {
           connect: {
             id: body.habitId,
