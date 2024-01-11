@@ -19,4 +19,12 @@ export class ActivityRepository {
       },
     })
   }
+
+  async deleteActivity(activityId: string) {
+    return this.prisma.activity.delete({
+      where: {
+        id: activityId,
+      },
+    })
+  }
 }

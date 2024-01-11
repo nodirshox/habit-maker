@@ -1,5 +1,19 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import { ActivityService } from '@/modules/activities/activity.service'
 import { JwtAuthGuard } from '@/modules/auth/jwt-auth.guard'
 import { User } from '@/decorators/user.decorator'
@@ -17,5 +31,14 @@ export class ActivityController {
   @UseGuards(JwtAuthGuard)
   createActivity(@Body() body: CreateActivityDto, @User() user: IUser) {
     return this.activityService.createActivity(body, user.id)
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete activity' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @UseGuards(JwtAuthGuard)
+  deleteHabit(@Param('id') habitId: string) {
+    return this.activityService.deleteActivity(habitId)
   }
 }

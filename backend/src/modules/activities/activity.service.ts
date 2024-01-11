@@ -18,4 +18,12 @@ export class ActivityService {
     const activity = await this.activityRepository.createActivity(body)
     return activity
   }
+
+  async deleteActivity(activityId: string) {
+    await this.activityRepository.deleteActivity(activityId)
+
+    return {
+      message: `Activity with ID = ${activityId} is deleted successfully`,
+    }
+  }
 }
