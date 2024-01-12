@@ -27,10 +27,6 @@ export class ActivityRepository {
     })
   }
 
-  async getAllActivities() {
-    return this.prisma.activity.findMany()
-  }
-
   async deleteActivity(activityId: string) {
     return this.prisma.activity.delete({
       where: {

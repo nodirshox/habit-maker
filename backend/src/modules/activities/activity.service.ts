@@ -20,10 +20,6 @@ export class ActivityService {
     return activity
   }
 
-  async getAllActivities() {
-    return this.activityRepository.getAllActivities()
-  }
-
   async deleteActivity(activityId: string) {
     const activity = await this.activityRepository.findActivityById(activityId)
 
