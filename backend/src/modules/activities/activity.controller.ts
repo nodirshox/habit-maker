@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -31,6 +32,13 @@ export class ActivityController {
   @UseGuards(JwtAuthGuard)
   createActivity(@Body() body: CreateActivityDto, @User() user: IUser) {
     return this.activityService.createActivity(body, user.id)
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get activities' })
+  @UseGuards(JwtAuthGuard)
+  getActivities() {
+    return this.activityService.getAllActivities()
   }
 
   @Delete(':id')
