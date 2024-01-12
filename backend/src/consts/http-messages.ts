@@ -17,4 +17,7 @@ export const HTTP_MESSAGES = {
 
   // Habit
   HABIT_NOT_FOUND: 'Habit not found',
+
+  //Activity
+  ACTIVITY_NOT_FOUND: 'Activity not found',
 }

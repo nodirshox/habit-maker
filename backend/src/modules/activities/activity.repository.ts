@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from '@/core/prisma/prisma.service'
 import { Activity } from '@prisma/client'
 import { CreateActivityDto } from '@/modules/activities/dto/create-activity.dto'
+import { HTTP_MESSAGES } from '@/consts/http-messages'
 
 @Injectable()
 export class ActivityRepository {
@@ -17,6 +18,12 @@ export class ActivityRepository {
           },
         },
       },
+    })
+  }
+
+  async findActivityById(activityId: string) {
+    return this.prisma.activity.findUnique({
+      where: { id: activityId },
     })
   }
 
