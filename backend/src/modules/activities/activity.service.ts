@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { CreateActivityDto } from '@/modules/activities/dto/create-activity.dto'
 import { ActivityRepository } from '@/modules/activities/activity.repository'
 import { HabitsService } from '@/modules/habits/habits.service'
+import { HTTP_MESSAGES } from '@/consts/http-messages'
 
 @Injectable()
 export class ActivityService {
@@ -20,6 +21,11 @@ export class ActivityService {
   }
 
   async deleteActivity(activityId: string) {
+    const activity = await this.activityRepository.findActivityById(activityId)
+
+    if (!activity) {
+      throw new BadRequestException(HTTP_MESSAGES.ACTIVITY_NOT_FOUND)
+    }
     await this.activityRepository.deleteActivity(activityId)
 
     return {

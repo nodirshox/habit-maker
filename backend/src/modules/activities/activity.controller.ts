@@ -35,8 +35,8 @@ export class ActivityController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete activity' })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK })
   @UseGuards(JwtAuthGuard)
   deleteHabit(@Param('id') habitId: string) {
     return this.activityService.deleteActivity(habitId)
