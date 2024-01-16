@@ -61,11 +61,7 @@ export class HabitsRepository {
           },
         },
         createdAt: true,
-        activities: {
-          select: {
-            date: true,
-          },
-        },
+        activities: true,
       },
     })
   }
