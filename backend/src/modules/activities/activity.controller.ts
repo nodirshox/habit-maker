@@ -29,6 +29,11 @@ export class ActivityController {
 
   @Post()
   @ApiOperation({ summary: 'Create activity' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Created',
+  })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Conflict' })
   @UseGuards(JwtAuthGuard)
   createActivity(@Body() body: CreateActivityDto, @User() user: IUser) {
     return this.activityService.createActivity(body, user.id)
@@ -36,6 +41,10 @@ export class ActivityController {
 
   @Get()
   @ApiOperation({ summary: 'Get activities' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'OK',
+  })
   @UseGuards(JwtAuthGuard)
   getActivities() {
     return this.activityService.getAllActivities()
@@ -44,7 +53,7 @@ export class ActivityController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete activity' })
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({ status: HttpStatus.OK })
+  @ApiResponse({ status: HttpStatus.OK, description: 'OK' })
   @UseGuards(JwtAuthGuard)
   deleteHabit(@Param('id') habitId: string) {
     return this.activityService.deleteActivity(habitId)

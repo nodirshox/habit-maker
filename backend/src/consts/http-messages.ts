@@ -20,4 +20,5 @@ export const HTTP_MESSAGES = {
 
   //Activity
   ACTIVITY_NOT_FOUND: 'Activity not found',
+  ACTIVITY_ALREADY_EXISTS: 'Activity already exists',
 }
