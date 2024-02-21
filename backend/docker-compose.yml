@@ -1,7 +1,7 @@
 version: "3.1"
 
 services:
-  postgres:
+  habit-maker-postgres:
     container_name: habit-maker-postgres
     image: postgres:15-alpine
     restart: always
@@ -13,16 +13,16 @@ services:
       - "6000:5432"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`${POSTGRES_DOMAIN}`)"
-      - "traefik.http.routers.postgres.entrypoints=websecure"
-      - "traefik.http.routers.postgres.tls.certresolver=letsencrypt"
-      - "traefik.http.services.postgres.loadbalancer.server.port=5432"
+      - "traefik.http.routers.habit-maker-postgres.rule=Host(`${POSTGRES_DOMAIN}`)"
+      - "traefik.http.routers.habit-maker-postgres.entrypoints=websecure"
+      - "traefik.http.routers.habit-maker-postgres.tls.certresolver=letsencrypt"
+      - "traefik.http.services.habit-maker-postgres.loadbalancer.server.port=5432"
       - "traefik.docker.network=ta_default"
     volumes:
       - habit-db:/var/lib/postgresql/data
     networks:
      - common_network
-  backend:
+  habit-maker-backend:
     container_name: habit-maker-backend
     image: nodirshox/habit-maker-backend:latest
     restart: always
@@ -39,10 +39,10 @@ services:
       - "6001:4000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`${BACKEND_DOMAIN}`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.backend.loadbalancer.server.port=4000"
+      - "traefik.http.routers.habit-maker-backend.rule=Host(`${BACKEND_DOMAIN}`)"
+      - "traefik.http.routers.habit-maker-backend.entrypoints=websecure"
+      - "traefik.http.routers.habit-maker-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.habit-maker-backend.loadbalancer.server.port=4000"
       - "traefik.docker.network=ta_default"
     networks:
      - common_network
