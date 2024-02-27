@@ -61,8 +61,14 @@ export class ActivityRepository {
     })
   }
 
-  async getAllActivities() {
-    return this.prisma.activity.findMany()
+  async getAllActivities(userId: string) {
+    return this.prisma.activity.findMany({
+      where: {
+        habit: {
+          userId,
+        },
+      },
+    })
   }
 
   async deleteActivity(activityId: string) {

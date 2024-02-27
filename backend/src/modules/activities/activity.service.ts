@@ -20,8 +20,8 @@ export class ActivityService {
     return activity
   }
 
-  async getAllActivities() {
-    return this.activityRepository.getAllActivities()
+  async getAllActivities(userId: string) {
+    return this.activityRepository.getAllActivities(userId)
   }
 
   async deleteActivity(activityId: string) {

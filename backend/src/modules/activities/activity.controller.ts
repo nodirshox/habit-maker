@@ -46,8 +46,8 @@ export class ActivityController {
     description: 'OK',
   })
   @UseGuards(JwtAuthGuard)
-  getActivities() {
-    return this.activityService.getAllActivities()
+  getActivities(@User() user: IUser) {
+    return this.activityService.getAllActivities(user.id)
   }
 
   @Delete(':id')
